@@ -59,12 +59,7 @@ def pred_img(conf, model):
                 boxes = res[0].boxes
                 res_plot = res[0].plot()[:,:,::-1]
                 st.image(res_plot,caption='Detected Image',use_column_width=True)
-                try:
-                    with st.expander("Results"):
-                        for box in boxes:
-                            st.write(box.data)
-                except Exception as e:
-                    st.write("No image is uploaded.")
+                
         else:
             st.write("No image is uploaded.")
     

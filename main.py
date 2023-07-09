@@ -1,0 +1,39 @@
+import streamlit as st
+import PIL
+import params
+import helper_funcs
+from pathlib import Path
+
+st.set_page_config(
+    page_title = "Traffic Signs Detection using YOLOv8",
+    page_icon= ":no_bicycles:",
+    layout= "wide",
+    initial_sidebar_state= "expanded"
+)
+
+st.title("Traffic Signs Detection using YOLOv8")
+
+with st.sidebar:
+    st.header("Model Configurations")
+    conf = float(st.slider("Confidence Level", 0, 100, 40)) / 100
+
+model_path = Path(params.MODEL_DIR)
+
+try:
+    model = helper_funcs.load_model(model_path)
+except Exception as e:
+    st.error("Unable to load model.")
+    st.error(e)
+
+st.sidebar.header("Image/Video Configurations")
+rb_source = st.sidebar.radio("Select Source", params.SOURCES_LIST)
+source_img = None
+
+if rb_source == params.IMAGE:
+    helper_funcs.pred_img(conf,model)
+
+elif rb_source == params.VIDEO:
+    helper_funcs.pred_video(conf, model)
+
+else:
+    st.error("Please select a valid source!")

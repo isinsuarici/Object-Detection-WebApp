@@ -41,10 +41,9 @@ def pred_img(conf, model):
     with col1:
         try:
             if src_img is None:
-                with open(params.DICT_IMG.get(selected_img),'rb') as image_file:
-                    uploaded_img = PIL.Image.open(params.DICT_IMG.get(selected_img))
-                    st.image(uploaded_img, caption="Choosen Image",
-                        use_column_width=True)
+                uploaded_img = PIL.Image.open(params.DICT_IMG.get(selected_img))
+                st.image(uploaded_img, caption="Choosen Image",
+                    use_column_width=True)
             else:
                 uploaded_img = PIL.Image.open(src_img)
                 st.image(uploaded_img, caption= "Uploaded Image", use_column_width=True)
@@ -58,7 +57,6 @@ def pred_img(conf, model):
                 boxes = res[0].boxes
                 res_plot = res[0].plot()[:,:,::-1]
                 st.image(res_plot,caption='Detected Image',use_column_width=True)
-                
         else:
             st.write("No image is uploaded.")
     

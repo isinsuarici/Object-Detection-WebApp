@@ -10,28 +10,30 @@ def load_model(model_path):
     return model
 
 def pred_video(conf, model):
-    id_vid = st.sidebar.selectbox("Choose a video...", params.DICT_VID.keys())
-    with open(params.DICT_VID.get(id_vid), 'rb') as video_file:
-        bytes = video_file.read()
-
-    if bytes:
-        st.video(bytes)
-    if st.sidebar.button('Detect Objects'):
-        try:
-            capt = cv2.VideoCapture(str(params.DICT_VID.get(id_vid)))
-            st_frame = st.empty()
-            while(capt.isOpened()):
-                ret, img = capt.read()
-                if ret:
-                    img = cv2.resize(img,(416,416))
-                    res = model.predict(img,conf=conf)
-                    res_plot = res[0].plot()
-                    st_frame.image(res_plot, caption='Detected Video', channels="BGR", use_column_width=True)
-                else:
-                    capt.release()
-                    break
-        except Exception as e:
-            st.sidebar.error("Error while loading video file:" + str(e))
+    col1, col2 = st.columns(2)
+    with col1:
+        id_vid = st.sidebar.selectbox("Choose a video...", params.DICT_VID.keys())
+        with open(params.DICT_VID.get(id_vid), 'rb') as video_file:
+            bytes = video_file.read()
+        if bytes:
+            st.video(bytes)
+    with col2:
+        if st.sidebar.button('Detect Objects'):
+            try:
+                capt = cv2.VideoCapture(str(params.DICT_VID.get(id_vid)))
+                st_frame = st.empty()
+                while(capt.isOpened()):
+                    ret, img = capt.read()
+                    if ret:
+                        img = cv2.resize(img,(416,416))
+                        res = model.predict(img,conf=conf)
+                        res_plot = res[0].plot()
+                        st_frame.image(res_plot, caption='Detected Video', channels="BGR", use_column_width=True)
+                    else:
+                        capt.release()
+                        break
+            except Exception as e:
+                st.sidebar.error("Error while loading video file:" + str(e))
 
 def pred_img(conf, model):
     src_img = st.sidebar.file_uploader("Upload an image...", 
@@ -57,6 +59,12 @@ def pred_img(conf, model):
                 boxes = res[0].boxes
                 res_plot = res[0].plot()[:,:,::-1]
                 st.image(res_plot,caption='Detected Image',use_column_width=True)
+                try:
+                    with st.expander("Results"):
+                        for box in boxes:
+                            st.write(box.data)
+                except Exception as e:
+                    st.write("No image is uploaded.")
         else:
             st.write("No image is uploaded.")
     

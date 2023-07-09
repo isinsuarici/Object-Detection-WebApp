@@ -12,10 +12,21 @@ st.set_page_config(
 )
 
 st.title("Traffic Signs Detection using YOLOv8")
+st.markdown("---")
+
+hide_st_style = """
+            <style>
+            #MainMenu {visibility: hidden;}
+            footer {visibility: hidden;}
+            header {visibility: hidden;}
+            </style>
+            """
+st.markdown(hide_st_style, unsafe_allow_html=True)
 
 with st.sidebar:
     st.header("Model Configurations")
     conf = float(st.slider("Confidence Level", 0, 100, 40)) / 100
+    st.markdown("---")
 
 model_path = Path(params.MODEL_DIR)
 

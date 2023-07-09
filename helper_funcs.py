@@ -59,7 +59,6 @@ def pred_img(conf, model):
                 boxes = res[0].boxes
                 res_plot = res[0].plot()[:,:,::-1]
                 st.image(res_plot,caption='Detected Image',use_column_width=True)
-                
+                        
         else:
             st.write("No image is uploaded.")
-    

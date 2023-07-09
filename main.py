@@ -1,5 +1,4 @@
 import streamlit as st
-import PIL
 import params
 import helper_funcs
 from pathlib import Path

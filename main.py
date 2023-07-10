@@ -30,7 +30,7 @@ with st.sidebar:
 model_path = Path(params.MODEL_DIR)
 
 try:
-    model = helper_funcs.load_model("weight/best.pt")
+    model = helper_funcs.load_model("best.pt")
 except Exception as e:
     st.error("Unable to load model.")
     st.error(e)

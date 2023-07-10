@@ -3,47 +3,53 @@ import params
 import helper_funcs
 from pathlib import Path
 
-st.set_page_config(
-    page_title = "Traffic Signs Detection using YOLOv8",
-    page_icon= ":no_bicycles:",
-    layout= "wide",
-    initial_sidebar_state= "expanded"
-)
+def set_page_config():
+    st.set_page_config(
+        page_title = "Traffic Signs Detection using YOLOv8",
+        page_icon= ":no_bicycles:",
+        layout= "wide",
+        initial_sidebar_state= "expanded"
+    )
 
-st.title("Traffic Signs Detection using YOLOv8")
-st.markdown("---")
-
-hide_st_style = """
-            <style>
-            #MainMenu {visibility: hidden;}
-            footer {visibility: hidden;}
-            header {visibility: hidden;}
-            </style>
-            """
-st.markdown(hide_st_style, unsafe_allow_html=True)
-
-with st.sidebar:
-    st.header("Model Configurations")
-    conf = float(st.slider("Confidence Level", 0, 100, 40)) / 100
+def main():
+    set_page_config()
+    st.title("Traffic Signs Detection using YOLOv8")
     st.markdown("---")
 
-model_path = Path(params.MODEL_DIR)
+    hide_st_style = """
+                <style>
+                #MainMenu {visibility: hidden;}
+                footer {visibility: hidden;}
+                header {visibility: hidden;}
+                </style>
+                """
+    st.markdown(hide_st_style, unsafe_allow_html=True)
 
-try:
-    model = helper_funcs.load_model(model_path)
-except Exception as e:
-    st.error("Unable to load model.")
-    st.error(e)
+    with st.sidebar:
+        st.header("Model Configurations")
+        conf = float(st.slider("Confidence Level", 0, 100, 40)) / 100
+        st.markdown("---")
 
-st.sidebar.header("Image/Video Configurations")
-rb_source = st.sidebar.radio("Select Source", params.SOURCES_LIST)
-source_img = None
+    model_path = Path(params.MODEL_DIR)
 
-if rb_source == params.IMAGE:
-    helper_funcs.pred_img(conf,model)
+    try:
+        model = helper_funcs.load_model(model_path)
+    except Exception as e:
+        st.error("Unable to load model.")
+        st.error(e)
 
-elif rb_source == params.VIDEO:
-    helper_funcs.pred_video(conf, model)
+    st.sidebar.header("Image/Video Configurations")
+    rb_source = st.sidebar.radio("Select Source", params.SOURCES_LIST)
+    source_img = None
 
-else:
-    st.error("Please select a valid source!")
+    if rb_source == params.IMAGE:
+        helper_funcs.detect_objects_in_image(conf,model)
+
+    elif rb_source == params.VIDEO:
+        helper_funcs.detect_objects_in_video(conf, model)
+
+    else:
+        st.error("Please select a valid source!")
+
+if __name__ == '__main__':
+    main()
